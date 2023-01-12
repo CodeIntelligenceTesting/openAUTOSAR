@@ -1,7 +1,14 @@
 #********************************************************************
 # (C) DaVinci Engineering GmbH 2022
 #*******************************************************************/
-cmake_minimum_required (VERSION 3.7.2)
+cmake_minimum_required(VERSION 3.16)
+
+# Export compile commands for use by other tools
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Include cifuzz cmake package
+find_package(cifuzz NO_SYSTEM_ENVIRONMENT_PATH)
+enable_fuzz_testing()
 
 project(openAUTOSAR)
 message("CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")

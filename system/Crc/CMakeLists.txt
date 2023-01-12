@@ -9,5 +9,8 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
                 )
     target_include_directories(Crc PUBLIC ${PROJECT_SOURCE_DIR}/system/Crc/include)
     target_include_directories(Crc PUBLIC ${PROJECT_SOURCE_DIR}/include )
+
+    add_fuzz_test(fuzz_crc test/cifuzz/fuzz_crc.cpp)
+    target_link_libraries(fuzz_crc PRIVATE Crc)
 endif()
 
