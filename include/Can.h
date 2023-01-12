@@ -146,7 +146,7 @@ typedef enum {
 typedef union {
      volatile uint32_t R;
      struct {
-    	 volatile uint32_t:24;
+    	 volatile uint32_t THERESTOFTHISTHING:24;
          volatile uint32_t BIT1ERR:1;
          volatile uint32_t BIT0ERR:1;
          volatile uint32_t ACKERR:1;
