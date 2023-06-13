@@ -1,23 +1,35 @@
-#********************************************************************
-# (C) DaVinci Engineering GmbH 2022
-#*******************************************************************/
-if(CMAKE_CROSSCOMPILING)
-    set (CMAKE_C_FLAGS "Options For Cross Compiling")
+project(canif)
 
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    string(APPEND CMAKE_C_FLAGS " -DUSE_COM -DUSE_PDUR")
-    add_library ( CanIf STATIC src/CanIf.c
-                                src/CanIf_Cfg.c
-                )
+# Add source files
+file(GLOB c_files
+    "src/*.c"
+    "test/stubs.c"
+)
 
-    target_include_directories(CanIf PUBLIC ${PROJECT_SOURCE_DIR}/include )
-    target_include_directories(CanIf PUBLIC ${PROJECT_SOURCE_DIR}/communication/ComServices/PDURouter/include )
-    target_include_directories(CanIf PUBLIC ${PROJECT_SOURCE_DIR}/communication/ComServices/Com/include )
-    target_include_directories(CanIf PUBLIC ${PROJECT_SOURCE_DIR}/communication/CAN/CanIf/include )
-    target_include_directories(CanIf PUBLIC ${PROJECT_SOURCE_DIR}/boards/linuxOs/MCAL/Mcu/include )
-    target_include_directories(CanIf PUBLIC ${PROJECT_SOURCE_DIR}/boards/linuxOs/MCAL/Can/include )
+# Create static library
+add_library(canif STATIC ${c_files})
 
-    add_fuzz_test(fuzz_canif test/cifuzz/fuzz_canif.cpp test/cifuzz/stubs.c)
-    target_link_libraries(fuzz_canif PRIVATE CanIf)
-            
-endif()
+
+set_target_properties(canif PROPERTIES CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+
+# Add headers
+target_include_directories(canif PUBLIC
+    "include"
+    "${PRJ_DIR}/include"
+    "${PRJ_DIR}/boards/linuxOs/MCAL/Mcu/include"
+    "${PRJ_DIR}/boards/linuxOs/MCAL/Can/include"
+    "${PRJ_DIR}/communication/ComServices/PDURouter/include"
+    "${PRJ_DIR}/communication/ComServices/Com/include"
+)
+
+set_target_properties(canif PROPERTIES CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+add_compile_definitions(USE_PDUR)
+
+# Add fuzz target
+add_fuzz_test(fuzz_canif "test/fuzztest.cpp" "test/mocklib.cpp")
+
+# Link fuzz target with sut
+target_link_libraries(fuzz_canif PRIVATE canif)
+

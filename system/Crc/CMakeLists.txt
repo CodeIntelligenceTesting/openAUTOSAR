@@ -1,16 +1,22 @@
-#********************************************************************
-# (C) DaVinci Engineering GmbH 2022
-#*******************************************************************/
-if(CMAKE_CROSSCOMPILING)
-    set (CMAKE_C_FLAGS "Options For Cross Compiling")
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    add_library (Crc STATIC src/Crc_16.c 
-                            src/Crc_32.c 
-                )
-    target_include_directories(Crc PUBLIC ${PROJECT_SOURCE_DIR}/system/Crc/include)
-    target_include_directories(Crc PUBLIC ${PROJECT_SOURCE_DIR}/include )
+project(crc)
 
-    add_fuzz_test(fuzz_crc test/cifuzz/fuzz_crc.cpp)
-    target_link_libraries(fuzz_crc PRIVATE Crc)
-endif()
+# Add source files
+file(GLOB c_files
+    "src/*.c"
+)
+
+# Create static library
+add_library(crc STATIC ${c_files})
+
+# Add headers
+target_include_directories(crc PUBLIC
+    "include"
+    "${PRJ_DIR}/include"
+)
+
+# Add fuzz target
+add_fuzz_test(fuzz_crc "test/fuzztest.cpp" "test/mocklib.cpp")
+
+# Link fuzz target with sut
+target_link_libraries(fuzz_crc PRIVATE crc)
 
