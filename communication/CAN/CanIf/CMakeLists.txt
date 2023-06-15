@@ -17,6 +17,7 @@ set_target_properties(canif PROPERTIES CMAKE_EXPORT_COMPILE_COMMANDS ON)
 target_include_directories(canif PUBLIC
     "include"
     "${PRJ_DIR}/include"
+    "${PRJ_DIR}/debug/Det/include"
     "${PRJ_DIR}/boards/linuxOs/MCAL/Mcu/include"
     "${PRJ_DIR}/boards/linuxOs/MCAL/Can/include"
     "${PRJ_DIR}/communication/ComServices/PDURouter/include"
@@ -25,7 +26,7 @@ target_include_directories(canif PUBLIC
 
 set_target_properties(canif PROPERTIES CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_compile_definitions(USE_PDUR)
+add_compile_definitions(USE_PDUR USE_DET)
 
 # Add fuzz target
 add_fuzz_test(fuzz_canif "test/fuzztest.cpp" "test/mocklib.cpp")
