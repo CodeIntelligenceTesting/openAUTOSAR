@@ -5,7 +5,7 @@ if(CMAKE_CROSSCOMPILING)
     set (CMAKE_C_FLAGS "Options For Cross Compiling")
 
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    string(APPEND CMAKE_C_FLAGS " -DUSE_COM -DUSE_PDUR")
+    string(APPEND CMAKE_C_FLAGS " -DUSE_COM -DUSE_PDUR -DUSE_DET")
     add_library ( CanIf STATIC src/CanIf.c
                                 src/CanIf_Cfg.c
                 )
@@ -16,8 +16,9 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     target_include_directories(CanIf PUBLIC ${PROJECT_SOURCE_DIR}/communication/CAN/CanIf/include )
     target_include_directories(CanIf PUBLIC ${PROJECT_SOURCE_DIR}/boards/linuxOs/MCAL/Mcu/include )
     target_include_directories(CanIf PUBLIC ${PROJECT_SOURCE_DIR}/boards/linuxOs/MCAL/Can/include )
+    target_include_directories(CanIf PUBLIC ${PROJECT_SOURCE_DIR}/debug/Det/include )
 
     add_fuzz_test(fuzz_canif test/cifuzz/fuzz_canif.cpp test/cifuzz/stubs.c)
     target_link_libraries(fuzz_canif PRIVATE CanIf)
-            
+
 endif()
