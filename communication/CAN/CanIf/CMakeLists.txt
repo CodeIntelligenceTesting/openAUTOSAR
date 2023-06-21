@@ -18,7 +18,7 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     target_include_directories(CanIf PUBLIC ${PROJECT_SOURCE_DIR}/boards/linuxOs/MCAL/Can/include )
     target_include_directories(CanIf PUBLIC ${PROJECT_SOURCE_DIR}/debug/Det/include )
 
-    add_fuzz_test(fuzz_canif test/cifuzz/fuzz_canif.cpp test/cifuzz/stubs.c)
+    add_fuzz_test(fuzz_canif test/cifuzz/fuzztest.cpp test/cifuzz/mocklib.cpp test/cifuzz/stubs.c)
     target_link_libraries(fuzz_canif PRIVATE CanIf)
 
 endif()
